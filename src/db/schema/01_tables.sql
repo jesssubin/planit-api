@@ -15,8 +15,8 @@ CREATE TABLE users (
 CREATE TABLE activities (
   id SERIAL PRIMARY KEY NOT NULL,
   name VARCHAR(255) NOT NULL,
-  latitude LATITUDE,
-  longitude LONGITUDE,
+  latitude DECIMAL,
+  longitude DECIMAL,
   category VARCHAR(255) NOT NULL
 );
 
