@@ -12,7 +12,8 @@
     "cors": "^2.8.5",
     "morgan": "~1.9.1",
     "dotenv": "^2.0.0",
-    "pg": "^6.4.2"
+    "pg": "^6.4.2",
+    "amadeus": "5.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

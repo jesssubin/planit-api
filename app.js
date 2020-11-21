@@ -10,25 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 
-// PG database client/connection setup
-// const { Pool } = require('pg');
-// const dbParams = require('./lib/db.js');
-// const db = new Pool(dbParams);
-// //const db = require("./db");
-// console.log("Trying to connect to db");
-// db.connect();
-// console.log("db connect done ");
-// const pg = require("pg");
-// const client = new pg.Client(dbParams);
-// const client = new pg.Client({
-//   user: 'dbuser',
-//   host: 'database.server.com',
-//   database: 'mydb',
-//   password: 'secretpassword',
-//   port: 3211,
-// })
-// client.connect()
-//       .catch(e => console.log('Error occured'))
+
 
 const { Client } = require('pg')
 const db = new Client()
@@ -39,12 +21,7 @@ db.connect(err => {
     console.log('connected')
   }
 })
-// console.log(client.connect); 
-// client.connect()
-//       .then(console.log("client connected"))
-//       .catch(e => console.log(`Error connecting to Postgres server:\n${e}`));
 
-// module.exports = client;
 
 
 const cors = require("cors"); 
@@ -68,6 +45,3 @@ app.use('/login', loginRouter);
 
 module.exports = app;
 
-// server.listen(PORT, () => {
-//   console.log(`Listening on port ${PORT} in ${ENV} mode.`);
-// });
