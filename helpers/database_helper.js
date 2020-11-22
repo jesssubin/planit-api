@@ -1,3 +1,9 @@
+const bcrypt = require('bcrypt');
+
+const hashedPassword = function(password) {
+  return bcrypt.hashSync(password, 10);
+};
+exports.hashedPassword = hashedPassword;
 
 //add user to database
 const addUser = function(db, user) {
@@ -6,7 +12,9 @@ const addUser = function(db, user) {
   VALUES ($1, $2, $3)
   RETURNING *
   `
-  return db.query(queryString, [user.full_name, user.email, user.password])
+  const queryParams = [user.full_name, user.email, user.password];
+
+  return db.query(queryString, queryParams)
   .then(res => {
     if (res.rows.length){
       return res.rows[0];

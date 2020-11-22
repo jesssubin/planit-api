@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
 const { addUser, getUserWithEmail } = require('../helpers/database_helper'); 
 
 /* GET users listing. */
@@ -9,8 +10,13 @@ module.exports = (db) => {
   });
 
   router.post('/', function(req, res, next) {
-    addUser(db, req.body);
-    res.send('respond with a resource');
+    if (!name || !email || !password || !confirmPassword) {
+      //error please input all forms
+      res.render("/")
+    } else {
+      addUser(db, req.body);
+      res.redirect('/');
+    }
   });
   return router; 
 }; 
