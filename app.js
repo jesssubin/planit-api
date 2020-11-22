@@ -2,33 +2,23 @@ const PORT = process.env.PORT || 3001;
 const ENV = require("./environment");
 
 const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
+const logger = require('morgan');
+const bodyParser = require("body-parser");
+
+const database = require('./helpers/database_helper'); 
+
+
+const registerRouter = require('./routes/register');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 
-// PG database client/connection setup
-// const { Pool } = require('pg');
-// const dbParams = require('./lib/db.js');
-// const db = new Pool(dbParams);
-// //const db = require("./db");
-// console.log("Trying to connect to db");
-// db.connect();
-// console.log("db connect done ");
-// const pg = require("pg");
-// const client = new pg.Client(dbParams);
-// const client = new pg.Client({
-//   user: 'dbuser',
-//   host: 'database.server.com',
-//   database: 'mydb',
-//   password: 'secretpassword',
-//   port: 3211,
-// })
-// client.connect()
-//       .catch(e => console.log('Error occured'))
+// const register = require('./routes/register');
+// const registerRouter = express.Router();
+
 
 const { Client } = require('pg')
 const db = new Client()
@@ -52,19 +42,28 @@ const databaseHelpers = require("./helpers/database_helper");
 
 const app = express();
 console.log("app connected");
-
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 app.use(cors()); 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
+app.use('/register', registerRouter);
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['apqr16-7acujhu-fj8ahfgk-jfujjka8', 'zxiuslojf-nsijwi98-dna1-2djkkand'],
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 module.exports = app;
 

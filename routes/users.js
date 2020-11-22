@@ -1,16 +1,18 @@
-var express = require('express');
-var router = express.Router();
-const { addUser, getUserWithEmail } = require('../helpers/database_helper'); 
+const express = require('express');
+const router  = express.Router();
 
-/* GET users listing. */
 module.exports = (db) => {
-  router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
+  router.get("/", (req, res) => {
+    db.query(`SELECT * FROM users;`)
+      .then(data => {
+        const users = data.rows;
+        res.json({ users });
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: err.message });
+      });
   });
-
-  router.post('/', function(req, res, next) {
-    addUser(db, req.body);
-    res.send('respond with a resource');
-  });
-  return router; 
-}; 
+  return router;
+};
