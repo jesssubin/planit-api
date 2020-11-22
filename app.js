@@ -1,6 +1,9 @@
 const PORT = process.env.PORT || 3001;
 const ENV = require("./environment");
 
+const dotENV = require('dotenv');
+dotENV.config({path: "./.env.development"});
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
