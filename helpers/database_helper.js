@@ -1,3 +1,9 @@
+const bcrypt = require('bcrypt');
+
+const hashedPassword = function(password) {
+  return bcrypt.hashSync(password, 10);
+};
+exports.hashedPassword = hashedPassword;
 
 //add user to database
 const addUser = function(db, user) {
