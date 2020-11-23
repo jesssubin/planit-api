@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const { addUser, getUserWithEmail, hashedPassword } = require('../helpers/database_helper'); 
+const bcrypt = require('bcrypt');
+const { addUser, getUserWithEmail, hashedPassword, userFromCookie } = require('../helpers/database_helper'); 
 
 /* GET users listing. */
 module.exports = (db) => {
@@ -23,11 +24,49 @@ module.exports = (db) => {
       }
       currentUser = user;
       req.session.userId = user.id;
-      return res.redirect("/");
+      return res.send("login");
     })
     .catch(e => {
       return res.send(e)
     });
+  });
+
+  router.get("/login", (request, response) => {
+    console.log(req.session.id);
+    if (userFromCookie(db, req.session.id)) { //if logged in
+      res.redirect("/");
+    }
+  });
+
+  router.post("/login", (req, res) => {
+    const { email, password } = req.body;
+  
+    getUserWithEmail(db, email)
+      .then(user => {
+        console.log(user)
+        if (user === undefined) {
+          return res.status(400).json({
+            status: 'error',
+            error: 'email not in database',
+          });
+        } else {
+          console.log("hello world")
+          console.log(bcrypt.compareSync(password, user.password));
+          if (bcrypt.compareSync(password, user.password)) {
+            
+            req.session.userId = user.id;
+            res.json({user});
+          } else {
+            return res.status(400).json({
+              status: 'error',
+              error: 'password does not match',
+            });
+          }
+        }
+      })
+      .catch(e => {
+        return res.send(e)
+      });
   });
   return router; 
 }; 

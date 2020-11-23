@@ -7,6 +7,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const logger = require('morgan');
+const bcrypt = require('bcrypt');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
