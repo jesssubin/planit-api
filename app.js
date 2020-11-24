@@ -2,7 +2,6 @@ const PORT = process.env.PORT || 3005;
 const ENV = require("./environment");
 
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
@@ -12,27 +11,8 @@ const bcrypt = require('bcrypt');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const req = require('request');
 const request = require('request-promise-native');
-
-// PG database client/connection setup
-// const { Pool } = require('pg');
-// const dbParams = require('./lib/db.js');
-// const db = new Pool(dbParams);
-// //const db = require("./db");
-// console.log("Trying to connect to db");
-// db.connect();
-// console.log("db connect done ");
-// const pg = require("pg");
-// const client = new pg.Client(dbParams);
-// const client = new pg.Client({
-//   user: 'dbuser',
-//   host: 'database.server.com',
-//   database: 'mydb',
-//   password: 'secretpassword',
-//   port: 3211,
-// })
-// client.connect()
-//       .catch(e => console.log('Error occured'))
 
 const { Client } = require('pg')
 const db = new Client()
@@ -84,6 +64,18 @@ app.get('/search', (req, res) => {
   }); 
 })
 
+app.get('/search', (req, res) => {
+  const API_KEY=process.env.API_KEY; 
+  const query = req.query.search
+  const queryFixed = query.trim().replace(/ /g,"+")
+  
+  //const queryHardcode = "restaurants+in+toronto"
+  const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?`
+  let url = `${searchURL}query=${queryFixed}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
+  request.get(url, (err, client, body) => {
+    res.send(body);
+  }); 
+})
 
 module.exports = app;
 
