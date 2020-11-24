@@ -55,11 +55,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
+
 app.get('/search', (req, res) => {
+  
+  console.log(req.query.search)
+ 
   const API_KEY=process.env.API_KEY; 
-  const query = "restaurants+in+Toronto" 
+  const query = req.query.search
+  const queryFixed = query.trim().replace(/ /g,"+")
+  console.log(queryFixed)
+  const queryHardcode = "restaurants+in+toronto"
   const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?`
-  let url = `${searchURL}query=${query}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
+  let url = `${searchURL}query=${queryFixed}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
   request.get(url, (err, client, body) => {
     res.send(body);
   }); 
