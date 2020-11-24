@@ -1,3 +1,9 @@
+const bcrypt = require('bcrypt');
+
+const hashedPassword = function(password) {
+  return bcrypt.hashSync(password, 10);
+};
+exports.hashedPassword = hashedPassword;
 
 //add user to database
 const addUser = function(db, user) {
@@ -18,7 +24,7 @@ const addUser = function(db, user) {
 exports.addUser = addUser;
 
 //find a user by their email
-const getUserWithEmail = function(email) {
+const getUserWithEmail = function(db, email) {
   const queryString = `SELECT * FROM users
                         WHERE email = $1;
                       `;
@@ -36,3 +42,21 @@ const getUserWithEmail = function(email) {
 };
 exports.getUserWithEmail = getUserWithEmail;
 
+const userFromCookie = function(db, userId) {
+  if (!userId) {
+    return null;
+  } else {
+    const queryString = `SELECT * FROM users WHERE id = $1;`;
+    const queryParams = [userId];
+
+    return db.query(queryString, queryParams)
+    .then (result => {
+      if (result.rows === []) {
+        return null;
+      } else {
+        return result.rows[0];
+      }
+    })
+  }
+};
+exports.userFromCookie = userFromCookie;

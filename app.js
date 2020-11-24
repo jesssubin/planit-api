@@ -1,10 +1,13 @@
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3005;
 const ENV = require("./environment");
 
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const logger = require('morgan');
+const bcrypt = require('bcrypt');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -54,6 +57,13 @@ const databaseHelpers = require("./helpers/database_helper");
 const app = express();
 console.log("app connected");
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['apqr16-7acujhu-fj8ahfgk-jfujjka8', 'zxiuslojf-nsijwi98-dna1-2djkkand'],
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
+
 
 app.use(cors()); 
 app.use(logger('dev'));
@@ -77,6 +87,6 @@ app.get('/search', (req, res) => {
 
 module.exports = app;
 
-// server.listen(PORT, () => {
-//   console.log(`Listening on port ${PORT} in ${ENV} mode.`);
-// });
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT} in ${ENV} mode.`);
+});
