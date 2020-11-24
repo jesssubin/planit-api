@@ -9,6 +9,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const request = require('request-promise-native');
 
 // PG database client/connection setup
 // const { Pool } = require('pg');
@@ -64,6 +65,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
+app.get('/search', (req, res) => {
+  const query="Toronto"; 
+  const API_KEY=process.env.REACT_APP_API_KEY; 
+  const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
+  request.get(searchURL, (err, res, body) => {
+    console.log(body);
+  }); 
+})
 
 
 module.exports = app;
