@@ -9,7 +9,7 @@ module.exports = (db) => {
     res.send(req.session);
   });
 
-  router.post('/', function(req, res, next) {
+  router.post('/register', function(req, res, next) {
     const { password } = req.body;
     const userPassword = hashedPassword(password);
     req.body.password = userPassword;

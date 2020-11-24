@@ -57,14 +57,11 @@ app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
 
 app.get('/search', (req, res) => {
-  
-  console.log(req.query.search)
- 
   const API_KEY=process.env.API_KEY; 
   const query = req.query.search
   const queryFixed = query.trim().replace(/ /g,"+")
-  console.log(queryFixed)
-  const queryHardcode = "restaurants+in+toronto"
+  
+  //const queryHardcode = "restaurants+in+toronto"
   const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?`
   let url = `${searchURL}query=${queryFixed}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
   request.get(url, (err, client, body) => {
