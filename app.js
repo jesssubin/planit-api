@@ -55,14 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
-app.get('/search', (req, res) => {
-  const query="Toronto"; 
-  const API_KEY=process.env.REACT_APP_API_KEY; 
-  const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
-  request.get(searchURL, (err, res, body) => {
-    console.log(body);
-  }); 
-})
+
 
 app.get('/search', (req, res) => {
   const API_KEY=process.env.API_KEY; 
