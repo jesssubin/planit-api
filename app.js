@@ -56,11 +56,12 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/login', loginRouter);
 app.get('/search', (req, res) => {
-  const query="Toronto"; 
   const API_KEY=process.env.API_KEY; 
-  const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${API_KEY}`
-  request.get(searchURL, (err, res, body) => {
-    console.log(body);
+  const query = "restaurants+in+Toronto" 
+  const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?`
+  let url = `${searchURL}query=${query}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
+  request.get(url, (err, client, body) => {
+    res.send(body);
   }); 
 })
 
