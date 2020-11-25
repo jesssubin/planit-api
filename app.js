@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const activitiesRouter = require('./routes/activities');
+const favouritesRouter = require('./routes/favourites');
 const req = require('request');
 const request = require('request-promise-native');
 
@@ -49,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/api/activities', activitiesRouter(db));
+app.use('/api/favourites', favouritesRouter(db));
 
 
 app.get('/search', (req, res) => {

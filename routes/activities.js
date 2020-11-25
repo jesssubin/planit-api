@@ -18,14 +18,14 @@ module.exports = db => {
 
       // console.log("reqbody: ", req.body) <-- activity without id
       // console.log("activity: ", activity) <-- activity with id
-
+      
       if (!user) {
         return res.status(400).json({
           status: 'error',
           error: 'req body cannot be empty',
         });
       }
-      return res.send("activity saved!");
+      return res.send(activity);
     })
     .catch(e => {
       return res.send(e)
