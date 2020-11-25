@@ -25,9 +25,10 @@ exports.addUser = addUser;
 
 //find a user by their email
 const getUserWithEmail = function(db, email) {
-  const queryString = `SELECT * FROM users
-                        WHERE email = $1;
-                      `;
+  const queryString = `
+  SELECT * FROM users
+  WHERE email = $1;
+  `;
 
   const queryParams = [email];
 
@@ -94,7 +95,7 @@ const myFavourites = function(db, userId) {
 }
 exports.myFavourites = myFavourites;
 
-const getActivities = function(db, activitiyId) {
+const getActivities = function(db, activityId) {
   let queryString = `
     SELECT *
     FROM activities
@@ -109,14 +110,14 @@ const getActivities = function(db, activitiyId) {
 }
 exports.getActivities = getActivities;
 
-const createFavourites = function(name, address, types) {
+const createFavourites = function(db, favourite) {
   const queryString = `
-  INSERT INTO favourites (name, address, types)
+  INSERT INTO favourites (is_favourite, user_id, activity_id)
   VALUES ($1, $2, $3)
   RETURNING *
   `;
-
-  return pool.query(queryString, [name, address, types])
+  const values = [1, favourite.userID, favourite.activityID]
+  return db.query(queryString, values)
   .then(res => {
     if (res.rows.length){
       return res.rows;
