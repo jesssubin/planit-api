@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const loginRouter = require('./routes/login');
+const activitiesRouter = require('./routes/activities');
 const req = require('request');
 const request = require('request-promise-native');
 
@@ -23,12 +23,6 @@ db.connect(err => {
     console.log('connected')
   }
 })
-// console.log(client.connect); 
-// client.connect()
-//       .then(console.log("client connected"))
-//       .catch(e => console.log(`Error connecting to Postgres server:\n${e}`));
-
-// module.exports = client;
 
 
 const cors = require("cors"); 
@@ -54,7 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
-app.use('/login', loginRouter);
+app.use('/api/activities', activitiesRouter(db));
 
 
 app.get('/search', (req, res) => {
