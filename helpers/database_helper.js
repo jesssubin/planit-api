@@ -78,6 +78,7 @@ const createActivity = function(db, activities) {
     }
   });
 }
+
 exports.createActivity = createActivity;
 
 const myFavourites = function(db, userId) {
@@ -127,3 +128,36 @@ const createFavourites = function(db, favourite) {
   });
 }
 exports.createFavourites = createFavourites;
+
+const createPlan = function(db, plan) {
+  const queryString = `
+  INSERT INTO plans (date, active, user_id)
+  VALUES ($1, $2, $3)
+  RETURNING *
+  `;
+  const values = [plan.date, 1, plan.userID]
+
+  return db.query(queryString, values)
+  .then(res => {
+    if (res.rows.length){
+      return res.rows;
+    } else {
+      return null;
+    }
+  });
+}
+exports.createPlan = createPlan;
+
+const myPlans = function(db, userId) {
+  let queryString = `
+    SELECT plans.*
+    FROM plans
+    WHERE plans.user_id = $1
+    `;
+  const values = [`${userId}`];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.myPlans = myPlans;
