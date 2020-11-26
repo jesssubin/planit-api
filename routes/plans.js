@@ -16,10 +16,11 @@ module.exports = db => {
   
   //add plan to database for user
   router.post('/', function(req, res, next) {
-   
+    console.log("Hello HELLO", req.body); 
+    const name = req.body.name;
     const date = req.body.date;
     const userID = req.session.userId;
-    const plan = { date, userID }
+    const plan = { name, date, userID }
     
     createPlan(db, plan)
     .then(plans => {  

@@ -131,11 +131,11 @@ exports.createFavourites = createFavourites;
 
 const createPlan = function(db, plan) {
   const queryString = `
-  INSERT INTO plans (date, active, user_id)
-  VALUES ($1, $2, $3)
+  INSERT INTO plans (name, date, active, user_id)
+  VALUES ($1, $2, $3, $4)
   RETURNING *
   `;
-  const values = [plan.date, 1, plan.userID]
+  const values = [plan.name, plan.date, 1, plan.userID]
 
   return db.query(queryString, values)
   .then(res => {
@@ -231,3 +231,18 @@ const deleteTimeslot = function(db, userID, timeslotID) {
   });
 }
 exports.deleteTimeslot = deleteTimeslot;
+
+const myActivePlans = function(db, userId) {
+  let queryString = `
+    SELECT plans.*
+    FROM plans
+    WHERE plans.user_id = $1
+    AND plans.active = 1
+    `;
+  const values = [`${userId}`];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.myActivePlans = myActivePlans;
