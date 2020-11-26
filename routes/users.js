@@ -74,7 +74,7 @@ module.exports = (db) => {
           });
         } else {
           console.log("hello world")
-          console.log(bcrsypt.compareSync(password, user.password));
+          console.log(bcrypt.compareSync(password, user.password));
           if (bcrypt.compareSync(password, user.password)) {
             
             req.session.userId = user.id;

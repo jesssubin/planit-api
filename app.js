@@ -12,6 +12,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const activitiesRouter = require('./routes/activities');
 const favouritesRouter = require('./routes/favourites');
+const plansRouter = require('./routes/plans');
 const req = require('request');
 const request = require('request-promise-native');
 
@@ -51,6 +52,7 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter(db));
 app.use('/api/activities', activitiesRouter(db));
 app.use('/api/favourites', favouritesRouter(db));
+app.use('/api/plans', plansRouter(db));
 
 
 app.get('/search', (req, res) => {
