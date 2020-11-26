@@ -123,6 +123,20 @@ const myPreviousPlans = function(db, userId) {
 }
 exports.myPreviousPlans = myPreviousPlans;
 
+const archivePlan = function(db, planId) {
+  let queryString = `
+    UPDATE plans
+    SET active = active + 1
+    WHERE id = $1; 
+    `;
+  const values = [planId];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.archivePlan = archivePlan;
+
 const getActivities = function(db, activityId) {
   let queryString = `
     SELECT *
