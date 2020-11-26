@@ -5,7 +5,20 @@ const { addUser, getUserWithEmail, hashedPassword, userFromCookie } = require('.
 
 /* GET users listing. */
 module.exports = (db) => {
-  router.get('/', function(req, res, next) {
+
+  router.get('/loggedin', function(req, res, next) {
+    if(req.session.userId) {
+      userFromCookie(db, req.session.userId)
+      .then(user =>{
+        res.send(user);
+      })
+    } else {
+      res.send(null);
+    }
+  });
+
+
+  router.get('/register', function(req, res, next) {
     res.send(req.session);
   });
 
