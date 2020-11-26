@@ -96,6 +96,48 @@ const myFavourites = function(db, userId) {
 }
 exports.myFavourites = myFavourites;
 
+const myActivePlans = function(db, userId) {
+  let queryString = `
+    SELECT plans.*
+    FROM plans
+    WHERE user_id = $1 AND active = 1; 
+    `;
+  const values = [`${userId}`];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.myActivePlans = myActivePlans;
+
+const myPreviousPlans = function(db, userId) {
+  let queryString = `
+    SELECT plans.*
+    FROM plans
+    WHERE user_id = $1 AND active != 1; 
+    `;
+  const values = [`${userId}`];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.myPreviousPlans = myPreviousPlans;
+
+const archivePlan = function(db, planId) {
+  let queryString = `
+    UPDATE plans
+    SET active = active + 1
+    WHERE id = $1; 
+    `;
+  const values = [planId];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.archivePlan = archivePlan;
+
 const getActivities = function(db, activityId) {
   let queryString = `
     SELECT *

@@ -5,26 +5,49 @@ const { addUser, getUserWithEmail, hashedPassword, userFromCookie } = require('.
 
 /* GET users listing. */
 module.exports = (db) => {
+
+  router.get('/loggedin', function(req, res, next) {
+    if(req.session.userId) {
+      userFromCookie(db, req.session.userId)
+      .then(user =>{
+        res.send(user);
+      })
+    } else {
+      res.send(null);
+    }
+  });
+
+
   router.get('/register', function(req, res, next) {
     res.send(req.session);
   });
 
   router.post('/register', function(req, res, next) {
-    const { password } = req.body;
+    const { password, email } = req.body;
     const userPassword = hashedPassword(password);
     req.body.password = userPassword;
     const user = req.body;
-    addUser(db, user)
-    .then(user => {
-      if (!user) {
-        return res.status(400).json({
+    getUserWithEmail(db, email)
+    .then(response => {
+      if (response) {
+        res.status(400).json({
           status: 'error',
-          error: 'req body cannot be empty',
+          msg: 'user with this email already exists',
         });
+      } else {
+        addUser(db, user)
+        .then(user => {
+          if (!user) {
+            return res.status(400).json({
+              status: 'error',
+              error: 'req body cannot be empty',
+            });
+          }
+          currentUser = user;
+          req.session.userId = user.id;
+          return res.send("login");
+        })
       }
-      currentUser = user;
-      req.session.userId = user.id;
-      return res.send("login");
     })
     .catch(e => {
       return res.send(e)
@@ -68,5 +91,10 @@ module.exports = (db) => {
         return res.send(e)
       });
   });
+
+  router.post("/logout", function(req, res) {
+    req.session = null;
+    res.send(req.session)
+  })
   return router; 
 }; 
