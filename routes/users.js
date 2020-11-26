@@ -23,21 +23,31 @@ module.exports = (db) => {
   });
 
   router.post('/register', function(req, res, next) {
-    const { password } = req.body;
+    const { password, email } = req.body;
     const userPassword = hashedPassword(password);
     req.body.password = userPassword;
     const user = req.body;
-    addUser(db, user)
-    .then(user => {
-      if (!user) {
-        return res.status(400).json({
+    getUserWithEmail(db, email)
+    .then(response => {
+      if (response) {
+        res.status(400).json({
           status: 'error',
-          error: 'req body cannot be empty',
+          msg: 'user with this email already exists',
         });
+      } else {
+        addUser(db, user)
+        .then(user => {
+          if (!user) {
+            return res.status(400).json({
+              status: 'error',
+              error: 'req body cannot be empty',
+            });
+          }
+          currentUser = user;
+          req.session.userId = user.id;
+          return res.send("login");
+        })
       }
-      currentUser = user;
-      req.session.userId = user.id;
-      return res.send("login");
     })
     .catch(e => {
       return res.send(e)
@@ -64,7 +74,7 @@ module.exports = (db) => {
           });
         } else {
           console.log("hello world")
-          console.log(bcrypt.compareSync(password, user.password));
+          console.log(bcrsypt.compareSync(password, user.password));
           if (bcrypt.compareSync(password, user.password)) {
             
             req.session.userId = user.id;
@@ -81,5 +91,10 @@ module.exports = (db) => {
         return res.send(e)
       });
   });
+
+  router.post("/logout", function(req, res) {
+    req.session = null;
+    res.send(req.session)
+  })
   return router; 
 }; 
