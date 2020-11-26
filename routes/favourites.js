@@ -33,6 +33,16 @@ module.exports = db => {
     });
   });
 
+  //delete a favourite or update it??
+  // router.delete('/', function(res, req, next) {
+      // const userId = req.session.userId;
+      // const activityId = req.body
+      // removeFavourite(db, userId
+  //   .catch(e => {
+  //     return res.send(e)
+  //   });
+  // })
+
   return router;
   
 };

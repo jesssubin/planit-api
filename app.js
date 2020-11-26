@@ -13,6 +13,7 @@ const usersRouter = require('./routes/users');
 const activitiesRouter = require('./routes/activities');
 const favouritesRouter = require('./routes/favourites');
 const plansRouter = require('./routes/plans');
+const timeslotsRouter = require('./routes/timeslots');
 const req = require('request');
 const request = require('request-promise-native');
 
@@ -53,6 +54,7 @@ app.use('/api/users', usersRouter(db));
 app.use('/api/activities', activitiesRouter(db));
 app.use('/api/favourites', favouritesRouter(db));
 app.use('/api/plans', plansRouter(db));
+app.use('/api/timeslots', timeslotsRouter(db));
 
 
 app.get('/search', (req, res) => {

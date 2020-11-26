@@ -5,7 +5,7 @@ const { addUser, getUserWithEmail, hashedPassword, userFromCookie } = require('.
 
 /* GET users listing. */
 module.exports = (db) => {
-  router.get('/', function(req, res, next) {
+  router.get('/register', function(req, res, next) {
     res.send(req.session);
   });
 

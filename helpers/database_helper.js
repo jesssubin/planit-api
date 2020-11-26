@@ -146,6 +146,7 @@ const createPlan = function(db, plan) {
     }
   });
 }
+
 exports.createPlan = createPlan;
 
 const myPlans = function(db, userId) {
@@ -161,3 +162,72 @@ const myPlans = function(db, userId) {
   });
 }
 exports.myPlans = myPlans;
+
+const createTimeslot = function(db, timeslot) {
+  const queryString = `
+  INSERT INTO time_slots (start_time, end_time, activity_id, plan_id)
+  VALUES ($1, $2, $3, $4)
+  RETURNING *
+  `;
+  const values = [timeslot.start_time, timeslot.end_time, timeslot.activity_id, timeslot.plan_id]
+
+  return db.query(queryString, values)
+  .then(res => {
+    if (res.rows.length){
+      return res.rows;
+    } else {
+      return null;
+    }
+  });
+}
+exports.createTimeslot = createTimeslot;
+
+const myTimeslots = function(db, userID, planID) {
+  let queryString = `
+    SELECT time_slots.*
+    FROM time_slots
+    WHERE time_slots.user_id = $1
+    AND time_slots.plan_id = $2
+    `;
+  return db.query(queryString, userID, planID)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.myTimeslots = myTimeslots;
+
+//is it easier to delete fav or update and %2 to determine whether it is still fav ??  
+const removeFavourite = function(db, userID, activityID) {
+  const queryString = `
+    DELETE FROM favourites 
+    WHERE user_id = $1 AND activity_id = $2
+    `;
+  const values = [favourite.userID, favourite.activityID]
+  return db.query(queryString, values)
+  .then(res => {
+    if (res.rows.length){
+      return res.rows;
+    } else {
+      return null;
+    }
+  });
+}
+exports.removeFavourite = removeFavourite;
+
+const deleteTimeslot = function(db, userID, timeslotID) {
+  const queryString = `
+    DELETE FROM time_slots 
+    WHERE user_id = $1 AND id = $2 
+    `;
+  const values = [userID, timeslotID]
+
+  return db.query(queryString, values)
+  .then(res => {
+    if (res.rows.length){
+      return res.rows;
+    } else {
+      return null;
+    }
+  });
+}
+exports.deleteTimeslot = deleteTimeslot;
