@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createActivity, myTimeslots, deleteTimeslot } = require('../helpers/database_helper'); 
+const { createActivity, myTimeslots, deleteTimeslot, createTimeslot, getTimeslotsForPlan } = require('../helpers/database_helper'); 
 const cookieSession = require('cookie-session');
 
 module.exports = db => {
@@ -31,34 +31,66 @@ module.exports = db => {
       return res.send(e)
     });
   });
+  router.post('/timeslot', function(req, res, next) {
+    //const { name, address, types } = req.body;
 
-  //create a new timeslot when user fills out form
-  // router.post('/', function(req, res, next) {
+    const time = {
+      "activity": req.body.activity,
+      "plan": req.body.plan,
+      "start_time": req.body.start_time,
+      "end_time": req.body.end_time}
+
+    createTimeslot(db, time)
+    .then(time => {
+      if (!user) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'req body cannot be empty',
+        });
+      }
+      return res.send(time);
+    })
+    .catch(e => {
+      return res.send(e)
+    });
+  });
+ 
+  router.post('/', function(req, res, next) {
+    const activities = req.body;
     
-  //   console.log("this is req.session: ", req.session)
-  //   console.log("this is req.body: ", req.body)
-  //   const { name, address, types } = req.body; //times hopefully also in here
-  //   const activity = {name, address, types};
-  //   const userId = req.session.userId;
+    console.log("activities here", activities)
+    createActivity(db, activities)
+    .then(activity => {
+      const { id, name, formatted_address, types } = activity
+      const activityResponse = { id, name, formatted_address, types }
+      if (!user) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'req body cannot be empty',
+        });
+      }
+      return res.send(activityResponse);
+    })
+    .catch(e => {
+      return res.send(e)
+    });
+  });
 
-  //   createActivity(db, activity)
-  //   .then(activityRes => {
-  //     const timeslotData = {activityID: activityRes.id, userID: userId} //add times
-      
-  //     createTimeslot(db, timeslotData)
-  //     return res.send("timeslot created in database!")
-  //     // if (!user) {
-  //     //   return res.status(400).json({
-  //     //     status: 'error',
-  //     //     error: 'req body cannot be empty',
-  //     //   });
-  //     // }
-  //     //return res.send(timeslot);
-  //   })
-  //   .catch(e => {
-  //     return res.send(e)
-  //   });
-  // });
+
+  router.get('/planlist', function(req, res, next) {
+    const planId = req.body.planId;
+    console.log("reqbody planlist!!", req.body)
+
+    getTimeslotsByPlan(db, planId)
+    .then(timeslotsByPlan => {
+      console.log("timeslots by plan return ", timeslotsByPlan)
+      return res.send(timeslotsByPlan);
+    })
+    .catch(e => {
+      return res.send(e)
+    });
+  });
+
 
   //delete a timeslot route
   // router.delete('/', function(req, res, next) {

@@ -96,20 +96,6 @@ const myFavourites = function(db, userId) {
 }
 exports.myFavourites = myFavourites;
 
-const myActivePlans = function(db, userId) {
-  let queryString = `
-    SELECT plans.*
-    FROM plans
-    WHERE user_id = $1 AND active = 1; 
-    `;
-  const values = [`${userId}`];
-  return db.query(queryString, values)
-  .then(res => {
-    return res.rows
-  });
-}
-exports.myActivePlans = myActivePlans;
-
 const myPreviousPlans = function(db, userId) {
   let queryString = `
     SELECT plans.*
@@ -224,12 +210,11 @@ const createTimeslot = function(db, timeslot) {
 }
 exports.createTimeslot = createTimeslot;
 
-const myTimeslots = function(db, userID, planID) {
+const myTimeslots = function(db, planID) {
   let queryString = `
     SELECT time_slots.*
     FROM time_slots
-    WHERE time_slots.user_id = $1
-    AND time_slots.plan_id = $2
+    WHERE time_slots.plan_id = $2
     `;
   return db.query(queryString, userID, planID)
   .then(res => {
@@ -278,13 +263,30 @@ const myActivePlans = function(db, userId) {
   let queryString = `
     SELECT plans.*
     FROM plans
-    WHERE plans.user_id = $1
-    AND plans.active = 1
+    WHERE user_id = $1
+    AND active = 1
     `;
-  const values = [`${userId}`];
+  const values = [userId];
   return db.query(queryString, values)
   .then(res => {
     return res.rows
   });
 }
 exports.myActivePlans = myActivePlans;
+
+//get timeslots for specific plan sorted by start time
+const getTimeslotsForPlan = function(db, planId) {
+  let queryString = `
+  SELECT time_slots.*
+  FROM time_slots
+  WHERE plan_id = $1
+  ORDER BY start_time ASC
+  `;
+const values = [userId];
+return db.query(queryString, values)
+.then(res => {
+  return res.rows
+});
+}
+
+exports.getTimeslotsForPlan = getTimeslotsForPlan
