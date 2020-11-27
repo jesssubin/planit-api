@@ -198,7 +198,7 @@ const createTimeslot = function(db, timeslot) {
   RETURNING *
   `;
   const values = [timeslot.start_time, timeslot.end_time, timeslot.activity_id, timeslot.plan_id]
-
+  console.log("data helper input: ", values)
   return db.query(queryString, values)
   .then(res => {
     if (res.rows.length){
@@ -282,7 +282,7 @@ const getTimeslotsForPlan = function(db, planId) {
   WHERE plan_id = $1
   ORDER BY start_time ASC
   `;
-const values = [userId];
+const values = [planId];
 return db.query(queryString, values)
 .then(res => {
   return res.rows
@@ -290,3 +290,17 @@ return db.query(queryString, values)
 }
 
 exports.getTimeslotsForPlan = getTimeslotsForPlan
+
+const getActivityById = function(db, activityId) {
+  let queryString = `
+  SELECT activities.*
+  FROM activities
+  WHERE id = $1
+  `;
+  const values = [activityId];
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.getActivityById = getActivityById

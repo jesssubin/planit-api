@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createActivity, myTimeslots, deleteTimeslot, createTimeslot, getTimeslotsForPlan } = require('../helpers/database_helper'); 
+const { createActivity, myTimeslots, deleteTimeslot, createTimeslot, getTimeslotsForPlan, getActivityById } = require('../helpers/database_helper'); 
 const cookieSession = require('cookie-session');
 
 module.exports = db => {
@@ -32,58 +32,66 @@ module.exports = db => {
     });
   });
 
-  router.post('/timeslot', function(req, res, next) {
-    //const { name, address, types } = req.body;
+  // router.post('/timeslot', function(req, res, next) {
+  //   //const { name, address, types } = req.body;
 
-    const time = {
-      "activity": req.body.activity,
-      "plan": req.body.plan,
-      "start_time": req.body.start_time,
-      "end_time": req.body.end_time}
+  //   const time = {
+  //     "activity": req.body.activity,
+  //     "plan": req.body.plan,
+  //     "start_time": req.body.start_time,
+  //     "end_time": req.body.end_time}
 
-    createTimeslot(db, time)
-    .then(time => {
-      if (!user) {
-        return res.status(400).json({
-          status: 'error',
-          error: 'req body cannot be empty',
-        });
-      }
-      return res.send(time);
-    })
-    .catch(e => {
-      return res.send(e)
-    });
-  });
+  //   createTimeslot(db, time)
+  //   .then(time => {
+  //     if (!user) {
+  //       return res.status(400).json({
+  //         status: 'error',
+  //         error: 'req body cannot be empty',
+  //       });
+  //     }
+  //     return res.send(time);
+  //   })
+  //   .catch(e => {
+  //     return res.send(e)
+  //   });
+  // });
  
   router.post('/', function(req, res, next) {
-    const { name, formatted_address, types, plan, start_time, end_time }= req.body;
-    const activity = { name, formatted_address, types }
-    console.log("activities here", activities)
-    createActivity(db, activities)
-    .then(activity => {
-      const { id, name, formatted_address, types } = activity
-      const activityResponse = { id, name, formatted_address, types }
-      
-      if (!user) {
-        return res.status(400).json({
-          status: 'error',
-          error: 'req body cannot be empty',
+    const { name, address, types, plan, start_time, end_time } = req.body;
+    const activity = { name, address, types }
+    console.log("activities here", req.body)
+    createActivity(db, activity)
+    .then(activityRes => {
+      const { id, name, formatted_address, types } = activityRes
+      //const activityResponse = { id, name, formatted_address, types }
+      const time = {
+        "activity_id": activityRes.id,
+        "plan_id": plan,
+        "start_time": start_time,
+        "end_time": end_time
+        }
+        console.log("input into createtimeslots", time)
+      createTimeslot(db, time)
+      .then(time => {
+        if (!user) {
+          return res.status(400).json({
+            status: 'error',
+            error: 'req body cannot be empty',
+          });
+        }
+        return res.send(time);
+       })
+        .catch(e => {
+          return res.send(e)
         });
-      }
-      return res.send(activityResponse);
-    })
-    .catch(e => {
-      return res.send(e)
     });
-  });
+  })
 
-
-  router.get('/planlist', function(req, res, next) {
+  router.post('/planlist', function(req, res, next) {
     const planId = req.body.planId;
     console.log("reqbody planlist!!", req.body)
 
-    getTimeslotsByPlan(db, planId)
+    getTimeslotsForPlan(db, planId)
     .then(timeslotsByPlan => {
       console.log("timeslots by plan return ", timeslotsByPlan)
       return res.send(timeslotsByPlan);
@@ -92,6 +100,21 @@ module.exports = db => {
       return res.send(e)
     });
   });
+
+  router.post('/activities', function(req, res, next) {
+    const actId = req.body.id;
+    console.log("reqbody activities", req.body)
+
+    getActivityById(db, actId)
+    .then(activity => {
+      console.log("activity by id return ", activity)
+      return res.send(activity);
+    })
+    .catch(e => {
+      return res.send(e)
+    });
+  });
+
 
 
   //delete a timeslot route
