@@ -299,3 +299,18 @@ const getActivityById = function(db, activityId) {
   });
 }
 exports.getActivityById = getActivityById
+
+const updateTimeslot = function(db, times) {
+  let queryString = `
+  UPDATE time_slots
+  SET start_time = $1, end_time = $2
+  WHERE id = $3
+  `;
+  const values = [times.start_time, times.end_time, times.id];
+  console.log(values, "cvalues from update")
+  return db.query(queryString, values)
+  .then(res => {
+    return res.rows
+  });
+}
+exports.updateTimeslot = updateTimeslot

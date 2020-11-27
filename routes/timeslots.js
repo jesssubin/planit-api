@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createActivity, myTimeslots, deleteTimeslot, createTimeslot, getTimeslotsForPlan, getActivityById } = require('../helpers/database_helper'); 
+const { createActivity, myTimeslots, deleteTimeslot, createTimeslot, getTimeslotsForPlan, getActivityById, updateTimeslot } = require('../helpers/database_helper'); 
 const cookieSession = require('cookie-session');
 
 module.exports = db => {
@@ -32,29 +32,6 @@ module.exports = db => {
     });
   });
 
-  // router.post('/timeslot', function(req, res, next) {
-  //   //const { name, address, types } = req.body;
-
-  //   const time = {
-  //     "activity": req.body.activity,
-  //     "plan": req.body.plan,
-  //     "start_time": req.body.start_time,
-  //     "end_time": req.body.end_time}
-
-  //   createTimeslot(db, time)
-  //   .then(time => {
-  //     if (!user) {
-  //       return res.status(400).json({
-  //         status: 'error',
-  //         error: 'req body cannot be empty',
-  //       });
-  //     }
-  //     return res.send(time);
-  //   })
-  //   .catch(e => {
-  //     return res.send(e)
-  //   });
-  // });
  
   router.post('/', function(req, res, next) {
     const { name, address, types, plan, start_time, end_time } = req.body;
@@ -127,18 +104,19 @@ module.exports = db => {
     
   });
 
-  //delete a timeslot route
-  // router.delete('/', function(req, res, next) {
-        // const user = req.session.userId;
-        // console.log("timeslot put", req.body);
-        // const timeslotId = req.body
-        // deleteTimeslot(db, user, timeslotId)
-  // })
+  router.post('/update', function(req, res, next) {
+    const timeslotData = req.body
+    console.log(timeslotData)
+    console.log("timeslot update", timeslotData);
+    updateTimeslot(db, timeslotData)
+    .then(updated => {
+      console.log("updated return ", updated)
+      res.send(updated)
+    })
+    
+  });
 
-  //update a timeslot
-  // router.put('/', function(req, res, next) {
-
-  // })
+  
 
   return router;
   
