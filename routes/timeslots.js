@@ -31,6 +31,7 @@ module.exports = db => {
       return res.send(e)
     });
   });
+
   router.post('/timeslot', function(req, res, next) {
     //const { name, address, types } = req.body;
 
@@ -56,13 +57,14 @@ module.exports = db => {
   });
  
   router.post('/', function(req, res, next) {
-    const activities = req.body;
-    
+    const { name, formatted_address, types, plan, start_time, end_time }= req.body;
+    const activity = { name, formatted_address, types }
     console.log("activities here", activities)
     createActivity(db, activities)
     .then(activity => {
       const { id, name, formatted_address, types } = activity
       const activityResponse = { id, name, formatted_address, types }
+      
       if (!user) {
         return res.status(400).json({
           status: 'error',
