@@ -241,20 +241,15 @@ const removeFavourite = function(db, userID, activityID) {
 }
 exports.removeFavourite = removeFavourite;
 
-const deleteTimeslot = function(db, userID, timeslotID) {
+const deleteTimeslot = function(db, timeslotId) {
   const queryString = `
     DELETE FROM time_slots 
-    WHERE user_id = $1 AND id = $2 
+    WHERE id = $1
     `;
-  const values = [userID, timeslotID]
-
-  return db.query(queryString, values)
+  console.log(timeslotId, "timeslot dh")
+  return db.query(queryString, [timeslotId])
   .then(res => {
-    if (res.rows.length){
-      return res.rows;
-    } else {
-      return null;
-    }
+    return res.rows
   });
 }
 exports.deleteTimeslot = deleteTimeslot;

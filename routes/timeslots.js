@@ -115,7 +115,17 @@ module.exports = db => {
     });
   });
 
-
+  router.post('/delete', function(req, res, next) {
+    
+    const timeslot = req.body.id
+    console.log("timeslot put", timeslot);
+    deleteTimeslot(db, timeslot)
+    .then(deleted => {
+      console.log("deleted return ", deleted)
+      
+    })
+    
+  });
 
   //delete a timeslot route
   // router.delete('/', function(req, res, next) {

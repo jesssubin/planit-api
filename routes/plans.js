@@ -35,9 +35,10 @@ module.exports = db => {
       "name": req.body.name,
       "date": req.body.date,
       "userID": req.session.userId}
-
+      console.log("planzz11", plan)
     createPlan(db, plan)
     .then(plans => {
+      console.log("planzz", plans)
       if (!user) {
         return res.status(400).json({
           status: 'error',
