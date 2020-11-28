@@ -99,7 +99,7 @@ module.exports = db => {
     deleteTimeslot(db, timeslot)
     .then(deleted => {
       console.log("deleted return ", deleted)
-      
+      res.status(204).send("successfully delted!")
     })
     
   });
@@ -109,6 +109,18 @@ module.exports = db => {
     console.log(timeslotData)
     console.log("timeslot update", timeslotData);
     updateTimeslot(db, timeslotData)
+    .then(updated => {
+      console.log("updated return ", updated)
+      res.send(updated)
+    })
+    
+  });
+
+  router.post('/history', function(req, res, next) {
+    const activityId = req.body.id
+    console.log(activityId)
+    console.log("timeslot update", activityId);
+    getActivityById(db, activityId)
     .then(updated => {
       console.log("updated return ", updated)
       res.send(updated)
