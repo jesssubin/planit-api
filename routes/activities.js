@@ -7,14 +7,15 @@ module.exports = db => {
   router.post('/', function(req, res, next) {
     //const { name, address, types } = req.body;
     console.log("this is req.session: ", req.session)
+    console.log("this is req.bod ", req.body)
     const activities = req.body;
     const userId = req.session.userId;
 
     createActivity(db, activities)
     .then(activity => {
-      // const favourite = {activityID: activity.id, userID: userId}
+      const favourite = {activityID: activity.id, userID: userId}
       
-      // createFavourites(db, favourite)
+      createFavourites(db, favourite)
 
       // console.log("reqbody: ", req.body) <-- activity without id
       // console.log("activity: ", activity) <-- activity with id
