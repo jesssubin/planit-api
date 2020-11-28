@@ -91,7 +91,7 @@ const myFavourites = function(db, userId) {
   const values = [`${userId}`];
   return db.query(queryString, values)
   .then(res => {
-    return res.rows
+    return res.rows || []
   });
 }
 exports.myFavourites = myFavourites;

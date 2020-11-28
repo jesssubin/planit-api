@@ -45,7 +45,7 @@ module.exports = (db) => {
           }
           currentUser = user;
           req.session.userId = user.id;
-          return res.send("login");
+          return res.send(user);
         })
       }
     })
@@ -78,7 +78,7 @@ module.exports = (db) => {
           if (bcrypt.compareSync(password, user.password)) {
             
             req.session.userId = user.id;
-            res.json({user});
+            res.json(user);
           } else {
             return res.status(400).json({
               status: 'error',

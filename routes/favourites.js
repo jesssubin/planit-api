@@ -5,8 +5,7 @@ const cookieSession = require('cookie-session');
 module.exports = db => {
   
   router.get('/', function(req, res, next) {
-    
-     
+  
     const userId = req.session.userId;
     console.log("reqbody!!", req.body)
     console.log("reqsess!!", req.session.userId)
@@ -14,8 +13,9 @@ module.exports = db => {
     myFavourites(db, userId)
     .then(favourites => {
       //const favourite = {activityID: activity.id, userID: userId}
- 
-      //console.log(favouritesChanged, "these are favourites CHANGED")
+      console.log(favourites)
+      // createFavourites(db, favourite)
+
       // console.log("reqbody: ", req.body) <-- activity without id
       // console.log("activity: ", activity) <-- activity with id
       
