@@ -83,7 +83,7 @@ exports.createActivity = createActivity;
 
 const myFavourites = function(db, userId) {
   let queryString = `
-    SELECT activities.*
+    SELECT activities.*, favourites.id as favourite_id
     FROM activities
     JOIN favourites ON activities.id = favourites.activity_id
     WHERE favourites.user_id = $1
@@ -224,20 +224,13 @@ const myTimeslots = function(db, planID) {
 exports.myTimeslots = myTimeslots;
 
 //is it easier to delete fav or update and %2 to determine whether it is still fav ??  
-const removeFavourite = function(db, userID, activityID) {
+const removeFavourite = function(db, favouriteId) {
   const queryString = `
     DELETE FROM favourites 
-    WHERE user_id = $1 AND activity_id = $2
+    WHERE id = $1
     `;
-  const values = [favourite.userID, favourite.activityID]
+  const values = [favouriteId]
   return db.query(queryString, values)
-  .then(res => {
-    if (res.rows.length){
-      return res.rows;
-    } else {
-      return null;
-    }
-  });
 }
 exports.removeFavourite = removeFavourite;
 

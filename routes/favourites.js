@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { myFavourites } = require('../helpers/database_helper'); 
+const { myFavourites, removeFavourite } = require('../helpers/database_helper'); 
 const cookieSession = require('cookie-session');
 
 module.exports = db => {
@@ -33,15 +33,20 @@ module.exports = db => {
     });
   });
 
-  //delete a favourite or update it??
-  // router.delete('/', function(res, req, next) {
-      // const userId = req.session.userId;
-      // const activityId = req.body
-      // removeFavourite(db, userId
-  //   .catch(e => {
-  //     return res.send(e)
-  //   });
-  // })
+  // delete a favourite or update it??
+  router.post('/', function(req, res, next) {
+      const userID = req.session;
+      const favouriteId = req.body.id
+      console.log("req.bod", req.body.id)
+      console.log("reqsess", req.session.userId)
+      removeFavourite(db, favouriteId) 
+      .then( () => {
+        res.status(204).send("successfully delted!")
+      })
+    .catch(e => {
+      return res.send(e)
+    });
+  })
 
   return router;
   
