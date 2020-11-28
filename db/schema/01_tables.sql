@@ -29,8 +29,8 @@ CREATE TABLE plans (
 
 CREATE TABLE time_slots (
   id SERIAL PRIMARY KEY NOT NULL,
-  start_time FLOAT NOT NULL DEFAULT 0,
-  end_time FLOAT NOT NULL DEFAULT 0,
+  start_time INT NOT NULL DEFAULT 0,
+  end_time INT NOT NULL DEFAULT 0,
   activity_id INTEGER REFERENCES activities(id) ON DELETE CASCADE,
   plan_id INTEGER REFERENCES plans(id) ON DELETE CASCADE
 );

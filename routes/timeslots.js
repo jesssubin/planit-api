@@ -47,7 +47,7 @@ module.exports = db => {
         "start_time": start_time,
         "end_time": end_time
         }
-        console.log("input into createtimeslots", time)
+        console.log("INPUT CREATE TIMESLOT", time)
       createTimeslot(db, time)
       .then(time => {
         if (!user) {
