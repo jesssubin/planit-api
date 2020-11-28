@@ -14,9 +14,8 @@ module.exports = db => {
     myFavourites(db, userId)
     .then(favourites => {
       //const favourite = {activityID: activity.id, userID: userId}
-      console.log(favourites)
-      // createFavourites(db, favourite)
-
+ 
+      //console.log(favouritesChanged, "these are favourites CHANGED")
       // console.log("reqbody: ", req.body) <-- activity without id
       // console.log("activity: ", activity) <-- activity with id
       
