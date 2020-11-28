@@ -19,7 +19,7 @@ module.exports = (db) => {
 
 
   router.get('/register', function(req, res, next) {
-    res.send(req.session);
+    res.send(req.session)
   });
 
   router.post('/register', function(req, res, next) {
