@@ -8,19 +8,6 @@ module.exports = db => {
     const userId = req.session.userId;
     myActivePlans(db, userId)
     .then(favourites => {
-      //const favourite = {activityID: activity.id, userID: userId}
-      console.log(favourites)
-      // createFavourites(db, favourite)
-
-      // console.log("reqbody: ", req.body) <-- activity without id
-      // console.log("activity: ", activity) <-- activity with id
-      
-      // if (!user) {
-      //   return res.status(400).json({
-      //     status: 'error',
-      //     error: 'req body cannot be empty',
-      //   });
-      // }
       return res.send(favourites);
     })
     .catch(e => {
@@ -29,16 +16,15 @@ module.exports = db => {
   });
 
   router.post('/plan', function(req, res, next) {
-    //const { name, address, types } = req.body;
-    console.log("this is req.session: ", req.session)
+
     const plan = {
       "name": req.body.name,
       "date": req.body.date,
       "userID": req.session.userId}
-      console.log("planzz11", plan)
+     
     createPlan(db, plan)
     .then(plans => {
-      console.log("planzz", plans)
+
       if (!user) {
         return res.status(400).json({
           status: 'error',
@@ -54,7 +40,6 @@ module.exports = db => {
   
   //archive plan
   router.post('/archive', function(req, res) {
-    console.log(req.body, "plans")
     const planId = req.body.planId
     archivePlan(db, planId)
     .then(plan => {
@@ -66,9 +51,6 @@ module.exports = db => {
     const userId = req.session.userId;
     myPreviousPlans(db, userId)
     .then(favourites => {
-      //const favourite = {activityID: activity.id, userID: userId}
-      console.log(favourites)
-    
       return res.send(favourites);
     })
     .catch(e => {

@@ -27,6 +27,7 @@ module.exports = (db) => {
     const userPassword = hashedPassword(password);
     req.body.password = userPassword;
     const user = req.body;
+    
     getUserWithEmail(db, email)
     .then(response => {
       if (response) {
@@ -55,7 +56,6 @@ module.exports = (db) => {
   });
 
   router.get("/login", (request, response) => {
-    console.log(req.session.id);
     if (userFromCookie(db, req.session.id)) { //if logged in
       res.redirect("/");
     }
@@ -66,17 +66,13 @@ module.exports = (db) => {
   
     getUserWithEmail(db, email)
       .then(user => {
-        console.log(user)
         if (user === undefined) {
           return res.status(400).json({
             status: 'error',
             error: 'email not in database',
           });
         } else {
-          console.log("hello world")
-          console.log(bcrypt.compareSync(password, user.password));
           if (bcrypt.compareSync(password, user.password)) {
-            
             req.session.userId = user.id;
             res.json(user);
           } else {

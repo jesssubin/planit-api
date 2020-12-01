@@ -27,7 +27,6 @@ db.connect(err => {
   }
 })
 
-
 const cors = require("cors"); 
 const databaseHelpers = require("./helpers/database_helper"); 
 
@@ -62,7 +61,6 @@ app.get('/search', (req, res) => {
   const query = req.query.search
   const queryFixed = query.trim().replace(/ /g,"+")
   
-  //const queryHardcode = "restaurants+in+toronto"
   const searchURL = `https://maps.googleapis.com/maps/api/place/textsearch/json?`
   let url = `${searchURL}query=${queryFixed}&key=AIzaSyARFnA9kzyqcgZmiBHLbc5COInWZlmtcac`
   request.get(url, (err, client, body) => {

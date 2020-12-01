@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 
+//use bcrypt to hash password
 const hashedPassword = function(password) {
   return bcrypt.hashSync(password, 10);
 };
@@ -29,7 +30,6 @@ const getUserWithEmail = function(db, email) {
   SELECT * FROM users
   WHERE email = $1;
   `;
-
   const queryParams = [email];
 
   return db.query(queryString, queryParams)
@@ -43,6 +43,7 @@ const getUserWithEmail = function(db, email) {
 };
 exports.getUserWithEmail = getUserWithEmail;
 
+//find a user from the cookie session
 const userFromCookie = function(db, userId) {
   if (!userId) {
     return null;
@@ -62,13 +63,13 @@ const userFromCookie = function(db, userId) {
 };
 exports.userFromCookie = userFromCookie;
 
+//create a new activity
 const createActivity = function(db, activities) {
   const queryString = `
   INSERT INTO activities (name, address, types)
   VALUES ($1, $2, $3)
   RETURNING *
   `;
-
   return db.query(queryString, [activities.name, activities.address, activities.types])
   .then(res => {
     if (res.rows.length){
@@ -81,6 +82,7 @@ const createActivity = function(db, activities) {
 
 exports.createActivity = createActivity;
 
+//get favourites for a user
 const myFavourites = function(db, userId) {
   let queryString = `
     SELECT activities.*, favourites.id as favourite_id
@@ -96,6 +98,7 @@ const myFavourites = function(db, userId) {
 }
 exports.myFavourites = myFavourites;
 
+//find past adventures for user
 const myPreviousPlans = function(db, userId) {
   let queryString = `
     SELECT plans.*
@@ -110,6 +113,7 @@ const myPreviousPlans = function(db, userId) {
 }
 exports.myPreviousPlans = myPreviousPlans;
 
+//set a plan to not-active
 const archivePlan = function(db, planId) {
   let queryString = `
     UPDATE plans
@@ -124,6 +128,7 @@ const archivePlan = function(db, planId) {
 }
 exports.archivePlan = archivePlan;
 
+//get activity details by id
 const getActivities = function(db, activityId) {
   let queryString = `
     SELECT *
@@ -139,6 +144,7 @@ const getActivities = function(db, activityId) {
 }
 exports.getActivities = getActivities;
 
+//create a favourite in database for specific user
 const createFavourites = function(db, favourite) {
   const queryString = `
   INSERT INTO favourites (is_favourite, user_id, activity_id)
@@ -157,6 +163,7 @@ const createFavourites = function(db, favourite) {
 }
 exports.createFavourites = createFavourites;
 
+//create a plan for specific user
 const createPlan = function(db, plan) {
   const queryString = `
   INSERT INTO plans (name, date, active, user_id)
@@ -174,9 +181,9 @@ const createPlan = function(db, plan) {
     }
   });
 }
-
 exports.createPlan = createPlan;
 
+//get all active plans for a user
 const myPlans = function(db, userId) {
   let queryString = `
     SELECT plans.*
@@ -191,6 +198,7 @@ const myPlans = function(db, userId) {
 }
 exports.myPlans = myPlans;
 
+//create a timeslot when user adds to plan
 const createTimeslot = function(db, timeslot) {
   const queryString = `
   INSERT INTO time_slots (start_time, end_time, activity_id, plan_id)
@@ -198,7 +206,7 @@ const createTimeslot = function(db, timeslot) {
   RETURNING *
   `;
   const values = [timeslot.start_time, timeslot.end_time, timeslot.activity_id, timeslot.plan_id]
-  console.log("data helper input: ", values)
+
   return db.query(queryString, values)
   .then(res => {
     if (res.rows.length){
@@ -210,6 +218,7 @@ const createTimeslot = function(db, timeslot) {
 }
 exports.createTimeslot = createTimeslot;
 
+//get timeslots for specific plan
 const myTimeslots = function(db, planID) {
   let queryString = `
     SELECT time_slots.*
@@ -223,7 +232,7 @@ const myTimeslots = function(db, planID) {
 }
 exports.myTimeslots = myTimeslots;
 
-//is it easier to delete fav or update and %2 to determine whether it is still fav ??  
+//remove a favourite 
 const removeFavourite = function(db, favouriteId) {
   const queryString = `
     DELETE FROM favourites 
@@ -234,12 +243,13 @@ const removeFavourite = function(db, favouriteId) {
 }
 exports.removeFavourite = removeFavourite;
 
+//delete timeslot from plan
 const deleteTimeslot = function(db, timeslotId) {
   const queryString = `
     DELETE FROM time_slots 
     WHERE id = $1
     `;
-  console.log(timeslotId, "timeslot dh")
+ 
   return db.query(queryString, [timeslotId])
   .then(res => {
     return res.rows
@@ -247,6 +257,7 @@ const deleteTimeslot = function(db, timeslotId) {
 }
 exports.deleteTimeslot = deleteTimeslot;
 
+//checks the active plans for the user
 const myActivePlans = function(db, userId) {
   let queryString = `
     SELECT plans.*
@@ -279,6 +290,7 @@ return db.query(queryString, values)
 
 exports.getTimeslotsForPlan = getTimeslotsForPlan
 
+//find the activity details for specific Id 
 const getActivityById = function(db, activityId) {
   let queryString = `
   SELECT activities.*
@@ -293,6 +305,7 @@ const getActivityById = function(db, activityId) {
 }
 exports.getActivityById = getActivityById
 
+//updates the time for a timeslot
 const updateTimeslot = function(db, times) {
   let queryString = `
   UPDATE time_slots
@@ -300,7 +313,7 @@ const updateTimeslot = function(db, times) {
   WHERE id = $3
   `;
   const values = [times.start_time, times.end_time, times.id];
-  console.log(values, "cvalues from update")
+ 
   return db.query(queryString, values)
   .then(res => {
     return res.rows

@@ -4,19 +4,6 @@ const cookieSession = require('cookie-session');
 
 module.exports = db => {
 
-  //get timeslots for specific plan - set order by start time in DB helper
-  // router.get('/', function(req, res, next) {
-  //   console.log("this is req times get", req)
-  //   console.log("req.body", req.body)
-  //   console.log("res timeslot get", res)
-  //   const userId = req.session.userId;
-  //   const planId = "something I don't know yet"
-  //   myTimeslots(db, userId, planId)
-  //   .then(timeslots => {
-  //     return res.send(timeslots)
-  //   })
-  // })
-  // this is for the drop down menu for adding an activity to a timeslot
   router.get('/', function(req, res, next) {
     const userId = req.session.userId;
     console.log("reqbody!!", req.body)
@@ -40,14 +27,13 @@ module.exports = db => {
     createActivity(db, activity)
     .then(activityRes => {
       const { id, name, formatted_address, types } = activityRes
-      //const activityResponse = { id, name, formatted_address, types }
       const time = {
         "activity_id": activityRes.id,
         "plan_id": plan,
         "start_time": start_time,
         "end_time": end_time
         }
-        console.log("INPUT CREATE TIMESLOT", time)
+    
       createTimeslot(db, time)
       .then(time => {
         if (!user) {
@@ -101,7 +87,6 @@ module.exports = db => {
       console.log("deleted return ", deleted)
       res.status(204).send("successfully delted!")
     })
-    
   });
 
   router.post('/update', function(req, res, next) {
@@ -113,7 +98,6 @@ module.exports = db => {
       console.log("updated return ", updated)
       res.send(updated)
     })
-    
   });
 
   router.post('/history', function(req, res, next) {
@@ -125,10 +109,7 @@ module.exports = db => {
       console.log("updated return ", updated)
       res.send(updated)
     })
-    
   });
-
-  
 
   return router;
   
